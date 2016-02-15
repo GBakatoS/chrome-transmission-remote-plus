@@ -164,6 +164,20 @@ function getTorrent(url) {
 	nothing
 =================================================================================*/
 function dlTorrent(request) {
+	if(localStorage.clickAction === 'dllocal' && (typeof request.data === 'undefined')) {
+	    getFile(request.url , function(file) {
+            var reader = new window.FileReader();
+            reader.readAsDataURL(file);
+            reader.onloadend = function() {
+                 var dataUrl = reader.result;
+                 var base64 = dataUrl.split(',')[1];
+                 request.data=base64;
+                dlTorrent(request)
+            }
+	    });
+	    return;
+	}
+
 	if (request.add_to_custom_locations) {
 		var dir = request.dir;
 		var label = request.new_label;
@@ -182,7 +196,7 @@ function dlTorrent(request) {
 		localStorage.dirs = JSON.stringify(dirs);
 	}
 
-	// how are we going to send this torrent to transmission?
+    // how are we going to send this torrent to transmission?
 	var args = (typeof request.data !== 'undefined') ? '"metainfo": "' + request.data + '"' : '"filename": "' + request.url + '"';
 	// where are we going to download it to?
 	if (typeof request.dir !== 'undefined') {
@@ -263,7 +277,7 @@ function notificationRefresh() {
 }
 
 // receive messages from other parts of the script
-chrome.extension.onConnect.addListener(function(port) {
+chrome.runtime.onConnect.addListener(function(port) {
 	switch(port.name) {
 		case 'popup':
 			port.onMessage.addListener(function(msg) {
@@ -314,7 +328,7 @@ chrome.extension.onConnect.addListener(function(port) {
 });
 
 // recieve message to send torrent to transmission
-chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	if(request.method == "get-torrent-info") {
 		sendResponse(torrentInfo[request.page]);
 	}else{

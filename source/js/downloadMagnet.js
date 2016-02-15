@@ -1,6 +1,6 @@
 var selectNewDirectoryIndex = 1;
 const TAG_DOWNLOAD_DIR = 1;
-var port = chrome.extension.connect({ name: 'downloadMagnet' });
+var port = chrome.runtime.connect({ name: 'downloadMagnet' });
 
 function decodeString(s) {
 	var r;
@@ -13,7 +13,7 @@ function decodeString(s) {
 }
 
 // populate the download popup with the torrent information
-chrome.extension.sendMessage({ 'method': 'get-torrent-info', 'page': 'magnet' }, function(request) {
+chrome.runtime.sendMessage({ 'method': 'get-torrent-info', 'page': 'magnet' }, function(request) {
 	var select = $('#downloadLocations');
 	var newLabel = $("#newLabel");
 	var newDirectory = $("#newDirectory");
@@ -47,7 +47,7 @@ chrome.extension.sendMessage({ 'method': 'get-torrent-info', 'page': 'magnet' },
 		} else {
 			message.dir = select.val();
 		}
-		chrome.extension.sendMessage(message);
+		chrome.runtime.sendMessage(message);
 		window.close();
 	});
 

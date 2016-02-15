@@ -23,7 +23,7 @@ var TORRENT_LINKS = [
 ];
 
 // open up a session with the background page
-var port = chrome.extension.connect({ name: 'inject' });
+var port = chrome.runtime.connect({ name: 'inject' });
 
 /*=================================================================================
  clickTorrent(event e)
@@ -37,7 +37,7 @@ var port = chrome.extension.connect({ name: 'inject' });
 	nothing
 =================================================================================*/
 function clickTorrent(e) {
-	var url = $(this).attr("href");
+	var url = $(this).prop("href");
 	for (var i = 0; i < TORRENT_LINKS.length; i++) {
 		if (TORRENT_LINKS[i].test(url)) {
 			// begin download of torrent
