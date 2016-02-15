@@ -87,13 +87,13 @@ function save() {
 	port.postMessage({ notificationstorrentfinished: $('#notificationstorrentfinished').checked });
 	port.postMessage({ notificationsnewtorrent: $('#notificationsnewtorrent').checked });
 
-	localStorage.start_paused = $('#start_paused').checked;
+	localStorage.start_paused = $('#start_paused').is(":checked");
 	
 	//whether to handle the torrent click (i.e. download remotely) or leave to chrome to handle (download locally)
 	localStorage.clickAction = ($('#dlremote').checked) ? 'dlremote' : 'dllocal';
 
 	//whether or not to show the download popup
-	localStorage.dlPopup = $('#dlpopup').checked;
+	localStorage.dlPopup = $('#dlpopup').is(":checked");
 
 	// loop through the custom directories and save them
 	var table = document.getElementById('customdirs');
